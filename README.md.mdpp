@@ -1,3 +1,5 @@
+[![Ansible Role](https://img.shields.io/ansible/role/3078.svg?style=flat-square)](https://galaxy.ansible.com/JohannWeging/docker-compose/)
+[![Travis](https://img.shields.io/travis/JohannWeging/ansible-docker-compose.svg?style=flat-square)](https://travis-ci.org/JohannWeging/ansible-docker-compose/)
 # JohannWeging.docker-compose
 Ansible role for deploying docker compose files.
 

@@ -6,6 +6,7 @@ services:
 
 env:
   matrix:
+    - VERSION=2.3
     - VERSION=2.4
     - VERSION=2.5
 
@@ -21,7 +22,8 @@ before_install:
   - sudo pip install --upgrade jmespath
 
 install:
-  - ln -s "$(pwd)" "$(pwd)/ci/roles/JohannWeging.docker-compose"
+  - mkdir -p ci/roles/JohannWeging.docker-compose
+  - cp -r tasks defaults ci/roles/JohannWeging.docker-compose
   - docker run -d --name=ci-runner -v /var/lib/docker:/var/lib/docker -v /var/run/docker.sock:/var/run/docker.sock johannweging/ci-runner:latest
 
 
