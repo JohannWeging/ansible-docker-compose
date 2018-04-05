@@ -1,4 +1,4 @@
-# johannweging.docker-compose
+# JohannWeging.docker-compose
 Ansible role for deploying docker compose files.
 
 ## Usage

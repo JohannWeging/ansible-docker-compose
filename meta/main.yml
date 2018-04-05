@@ -10,7 +10,5 @@ galaxy_info:
     - name: Archlinux
 
   galaxy_tags:
-    - ialinux
     - docker
     - compose
-    - docker-compose

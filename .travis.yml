@@ -1,3 +1,9 @@
+language: generic
+sudo: required
+
+services:
+  - docker
+
 env:
   matrix:
     - VERSION=2.0
@@ -18,7 +24,7 @@ before_install:
   - sudo pip install --upgrade ansible==${VERSION}
 
 install:
-  - ln -s ./ ci/roles/johannweging.docker-compose
+  - ln -s "$(pwd)" "$(pwd)/ci/roles/JohannWeging.docker-compose"
   - docker run -d --name=ci-runner -v /var/lib/docker:/var/lib/docker -v /var/run/docker.sock:/var/run/docker.sock johannweging/ci-runner:latest
 
 
