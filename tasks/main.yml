@@ -41,24 +41,50 @@
       register: tempdir
       become: true
 
-    - name: templating compose file
-      template:
-        src: "{{ docker_compose_file_path }}"
-        dest: "{{ tempdir.path }}/docker-compose.yml"
+    - name: copy base dir
+      copy:
+        src: "{{ docker_compose_file_path | dirname }}/"
+        dest: "{{ tempdir.path }}/"
       become: true
 
-    - name: pulling docker images
-      command: "docker-compose -p {{ docker_compose_project }} -f {{ tempdir.path }}/docker-compose.yml pull"
+    - name: set docker compose file name
+      set_fact:
+        docker_compose_file_name: "{{ docker_compose_file_path | basename }}"
+
+    - name: template compose file
+      template:
+        src: "{{ docker_compose_file_path }}"
+        dest: "{{ tempdir.path }}/{{ docker_compose_file_name }}"
+        force: true
+      become: true
+
+    - name: pull docker images
+      command: "docker-compose -p {{ docker_compose_project }} -f {{ tempdir.path }}/{{ docker_compose_file_name }} pull"
+      when: docker_compose_pull
+      become: true
+
+    - name: build docker images
+      command: "docker-compose -p {{ docker_compose_project }} -f {{ tempdir.path }}/{{ docker_compose_file_name }} build"
       when: docker_compose_pull
       become: true
 
     - name: "docker compose up"
-      command: "docker-compose -p {{ docker_compose_project }} -f {{ tempdir.path }}/docker-compose.yml up -d"
+      command: "docker-compose -p {{ docker_compose_project }} -f {{ tempdir.path }}/{{ docker_compose_file_name }} up -d"
       become: true
 
   always:
     - name: removing docker-compose.yml
       file:
-        path: "{{ tempdir }}"
+        path: "{{ tempdir.path }}"
         state: absent
       become: true
+
+- name: prune images
+  command: docker image prune --all --force
+  become: true
+  when: docker_compose_prune_images
+
+- name: prune volumes
+  command: "docker volume prune --force {% if docker_compose_prune_volume_filter is defined %} --filter '{{ docker_compose_prune_volume_filter }}' {% endif %}"
+  become: true
+  when: docker_compose_prune_volumes
