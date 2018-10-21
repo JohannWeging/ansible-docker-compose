@@ -30,7 +30,7 @@
         - "{{ graph_driver_dirs.files }}"
         - "{{ findmnt.results }}"
 
-  when: docker_info.stdout | from_json | json_query('Driver') == 'zfs'
+  when: docker_compose_clean_graph and docker_info.stdout | from_json | json_query('Driver') == 'zfs'
   become: true
 
 
